@@ -181,7 +181,7 @@ class eBPFCLIApplication(eBPFCoreApplication):
 
     @set_event_handler(Header.PACKET_IN)
     def packet_in(self, connection, pkt):
-	print '\n[{}] Received packet in {}'.format(connection.dpid, pkt.data.encode('hex'))
+        print '\n[{}] Received packet in {}'.format(connection.dpid, pkt.data.encode('hex'))
 
 
 if __name__ == '__main__':
