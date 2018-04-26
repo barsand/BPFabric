@@ -1,28 +1,20 @@
 #include <linux/if_ether.h>
 #include "ebpf_switch.h"
 
-struct bpf_map_def SEC("maps") inports = {
+struct bpf_map_def SEC("maps") rewrite = {
     .type = BPF_MAP_TYPE_HASH,
-    .key_size = 6,
-    .value_size = sizeof(uint32_t),
+    .key_size = sizeof(packet),
+    .value_size = 6, // eth_src
     .max_entries = 256,
 };
 
 uint64_t prog(struct packet *pkt)
 {
-    // uint32_t *port;
+    uint32_t *src;
 
-    // // If the packet src mac is unknown, tell the controller
-    // if (bpf_map_lookup_elem(&inports, pkt->eth.h_source, &port) == -1) {
-    //     return CONTROLLER;
-    // }
+    // Lookup the input packet src
+    bpf_map_lookup_elem(&rewrte, pkt, &src) 
 
-    // // Lookup the output port
-    // if (bpf_map_lookup_elem(&inports, pkt->eth.h_dest, &port) == -1) {
-    //     // If no entry was found send to the controller
-    //     return CONTROLLER;
-    // }
-
-    return CONTROLLER;
+    pkt->eth.h_source = src;
 }
 char _license[] SEC("license") = "GPL";
